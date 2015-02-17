@@ -1,4 +1,3 @@
-package tinypl;
 import java.io.*;
 
 public class Buffer {

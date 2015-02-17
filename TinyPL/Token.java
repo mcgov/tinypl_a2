@@ -1,4 +1,3 @@
-package tinypl;
 class Token {
 	public static final int SEMICOLON = 0;
 	public static final int COMMA = 1;

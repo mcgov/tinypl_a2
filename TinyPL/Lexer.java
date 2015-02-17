@@ -1,4 +1,3 @@
-package tinypl;
 import java.io.*;
 
 public class Lexer {
@@ -49,8 +48,7 @@ public class Lexer {
 					ch = buffer.getChar(); // e
 					ch = buffer.getChar();
 					nextToken = Token.TRUE_LIT;
-				}
-					else if (ident == 'f' && ch == 'a') {
+				}  	else if (ident == 'f' && ch == 'a') {
 						ch = buffer.getChar(); // l
 						ch = buffer.getChar(); // s
 						ch = buffer.getChar(); // e
@@ -70,6 +68,11 @@ public class Lexer {
 					nextToken = Token.KEY_BEGIN;
 			} else
 					nextToken = Token.ID;
+					
+					while( !Character.isWhitespace(ch) ){
+						ch = buffer.getChar();
+					} 
+					
 			}
 		else if (Character.isDigit(ch)) {
 			nextToken = getNumToken();
