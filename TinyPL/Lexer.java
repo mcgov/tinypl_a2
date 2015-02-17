@@ -1,3 +1,4 @@
+package tinypl;
 import java.io.*;
 
 public class Lexer {
@@ -48,12 +49,6 @@ public class Lexer {
 					ch = buffer.getChar(); // e
 					ch = buffer.getChar();
 					nextToken = Token.TRUE_LIT;
-				}  else if (ident == 'b' && ch == 'e') {
-					ch = buffer.getChar(); // i
-					ch = buffer.getChar(); // l
-					ch = buffer.getChar(); // e
-					ch = buffer.getChar();
-					nextToken = Token.KEY_WHILE;
 				}
 					else if (ident == 'f' && ch == 'a') {
 						ch = buffer.getChar(); // l
@@ -62,9 +57,9 @@ public class Lexer {
 						ch = buffer.getChar();
 						nextToken = Token.FALSE_LIT;
 				} else if (ident == 'w' && ch == 'h') {
-					ch = buffer.getChar(); // g
 					ch = buffer.getChar(); // i
-					ch = buffer.getChar(); // n
+					ch = buffer.getChar(); // l
+					ch = buffer.getChar(); // e
 					ch = buffer.getChar();
 					nextToken = Token.KEY_WHILE;
 			} else if (ident == 'b' && ch == 'e') {

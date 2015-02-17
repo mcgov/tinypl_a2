@@ -1,3 +1,4 @@
+package tinypl;
 public class TinyPL {
 		
 	public static void main(String args[]) {   
@@ -7,7 +8,19 @@ public class TinyPL {
 }
 
 class Program {
-	 
+	public Program(){
+	System.out.println( Lexer.nextToken );
+	 switch (Lexer.nextToken) {
+		 case Token.KEY_BEGIN: 
+			 System.out.println("Found Token Begin");
+			 //some other shit
+			 //call next thing.
+			 break;
+		default:
+			System.out.println("Nooooo");
+			//call exception method.
+	 		}
+	}
 }
 
 class Decls {
