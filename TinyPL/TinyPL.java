@@ -11,6 +11,13 @@ public static void find_semi(){
 			}
 }
 
+public static void expect_token(int tokenVal){
+	String msg = (Lexer.nextToken == tokenVal) ? "FOUND:" : "MISSING:";
+	System.err.println(msg + " " + Token.toString(tokenVal) + ".");
+	if ( msg == "FOUND:" )
+		Lexer.lex();
+}
+
 	public static void main(String args[]) {   
 		   Lexer.lex();
 		   new Program();  
@@ -132,18 +139,20 @@ class Stmt {
 	switch (Lexer.nextToken){
 		case Token.ID:
 			//TODO: store id name
+			System.err.println("ASSIGNMENT OPERATION.");
 			Lexer.lex();
-			System.out.println(Lexer.nextToken);
-			String msg = (Lexer.nextToken == Token.ASSIGN_OP) ? "FOUND:" : "MISSING:";
-			System.err.println(msg + " Assignment Operation (=).");
-			Lexer.lex();
+			TinyPL.expect_token(Token.ASSIGN_OP);
 			new Expr();
 			TinyPL.find_semi();
-
-			//new Expr();
 			break;
 		case Token.KEY_WHILE:
+			System.err.println("WHILE LOOP.");
 			Lexer.lex();
+			TinyPL.expect_token(Token.LEFT_PAREN);
+
+
+			break;
+
 		default:
 			System.out.println("ERROR: This statement is garbage.");
 		
