@@ -1,6 +1,16 @@
 
 public class TinyPL {
 		
+
+public static void find_semi(){
+	if ( Lexer.nextToken != Token.SEMICOLON ){
+				System.err.println("ERROR: Missing Semicolon");
+			} else{ 
+				System.err.println("FOUND: Semicolon."); 
+				Lexer.lex();
+			}
+}
+
 	public static void main(String args[]) {   
 		   Lexer.lex();
 		   new Program();  
@@ -45,35 +55,21 @@ class Decls {
 	if ( Lexer.nextToken == Token.KEY_INT){
 			System.err.println("FOUND: Int Token");
 			new Idlist();
-			if ( Lexer.nextToken != Token.SEMICOLON ){
-				System.err.println("ERROR: Missing Semicolon");
-			} else{ 
-				System.err.println("FOUND: Semicolon."); 
-				Lexer.lex();
-		}
+			TinyPL.find_semi();
  		
 		}
 	
 	if (Lexer.nextToken == Token.KEY_REAL){
 		System.err.println("FOUND: Real token");
 		new Idlist();
-			if ( Lexer.nextToken != Token.SEMICOLON ){
-				System.err.println("ERROR: Missing Semicolon");
-			} else{ 
-				System.err.println("FOUND: Semicolon.");
-				Lexer.lex(); }
-		
+		TinyPL.find_semi();
+
 		}
 	
 	if (Lexer.nextToken == Token.KEY_BOOL){ 
 		System.err.println("FOUND: Bool Token.");
 		new Idlist();
-			if ( Lexer.nextToken != Token.SEMICOLON ){
-				System.err.println("ERROR: Missing Semicolon");
-			} else{ 
-				System.err.println("FOUND: Semicolon."); 
-				Lexer.lex();
-			}
+		TinyPL.find_semi();
 		
 		}
 	}
@@ -132,7 +128,28 @@ class Stmts {
 }
 
 class Stmt {
-	 
+	public Stmt(){
+	switch (Lexer.nextToken){
+		case Token.ID:
+			//TODO: store id name
+			Lexer.lex();
+			System.out.println(Lexer.nextToken);
+			String msg = (Lexer.nextToken == Token.ASSIGN_OP) ? "FOUND:" : "MISSING:";
+			System.err.println(msg + " Assignment Operation (=).");
+			Lexer.lex();
+			new Expr();
+			TinyPL.find_semi();
+
+			//new Expr();
+			break;
+		case Token.KEY_WHILE:
+			Lexer.lex();
+		default:
+			System.out.println("ERROR: This statement is garbage.");
+		
+
+		}
+	}
 } 
 
 class Assign {
