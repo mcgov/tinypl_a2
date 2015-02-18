@@ -1,8 +1,10 @@
 
+
 public class TinyPL {
 		
 
 public static void find_semi(){
+	//evaulate the current next token to see if it's a terminator.
 	if ( Lexer.nextToken != Token.SEMICOLON ){
 				System.err.println("ERROR: Missing Semicolon");
 			} else{ 
@@ -12,6 +14,8 @@ public static void find_semi(){
 }
 
 public static void expect_token(int tokenVal){
+	//more general version of the above, to check for any token, just feed the token value.
+	//Token.<WhicheverTokenType>
 	String msg = (Lexer.nextToken == tokenVal) ? "FOUND:" : "MISSING:";
 	System.err.println(msg + " " + Token.toString(tokenVal) + ".");
 	if ( msg == "FOUND:" )
@@ -114,22 +118,10 @@ class Idlist {
 
 class Stmts {
 	public Stmts(){
-		if (Lexer.nextToken == Token.LEFT_BRACE){ 
-			System.err.println("FOUND: Left Brace.");
-			Lexer.lex();
-		}
-		else
-			System.err.println("ERROR: Missing Left Brace!");
-
+		TinyPL.expect_token(Token.LEFT_BRACE);
 		new Stmt();
 
-		if ( Lexer.nextToken == Token.RIGHT_BRACE ){
-			System.err.println("FOUND: Right Brace.");
-			Lexer.lex();
-		}
-		else
-			System.err.println("ERROR: Missing Right Brace!");
-
+		TinyPL.expect_token(Token.RIGHT_BRACE);
 	}
 	 
 }
@@ -139,18 +131,21 @@ class Stmt {
 	switch (Lexer.nextToken){
 		case Token.ID:
 			//TODO: store id name
-			System.err.println("ASSIGNMENT OPERATION.");
+			System.err.println("BEGIN: ASSIGNMENT OPERATION.");
 			Lexer.lex();
 			TinyPL.expect_token(Token.ASSIGN_OP);
 			new Expr();
 			TinyPL.find_semi();
+			System.err.println("END: ASSIGNMENT OPERATION.");
+
 			break;
 		case Token.KEY_WHILE:
-			System.err.println("WHILE LOOP.");
+			System.err.println("BEGIN: WHILE LOOP.");
 			Lexer.lex();
-			TinyPL.expect_token(Token.LEFT_PAREN);
-
-
+			TinyPL.expect_token( Token.LEFT_PAREN );
+			new Cond();
+			TinyPL.expect_token( Token.RIGHT_PAREN );
+			new Stmt();
 			break;
 
 		default:
