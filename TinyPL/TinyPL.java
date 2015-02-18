@@ -14,12 +14,15 @@ class Program {
 		 case Token.KEY_BEGIN: 
 			 System.err.println("Found Token BEGIN.");
 			 Lexer.lex();
-			 new Decls();
-
-			 //Lexer.lex();
-			 new Stmts();
-
-			 Lexer.lex();
+			 if ( Lexer.nextToken == Token.KEY_INT ||
+			 		Lexer.nextToken == Token.KEY_BOOL ||
+			 		Lexer.nextToken == Token.KEY_REAL ){
+			 	new Decls();
+			}
+			while ( Lexer.nextToken == Token.LEFT_BRACE ){
+				new Stmts();
+			}
+					///derp, messy.
 			 switch (Lexer.nextToken){	
 				case Token.KEY_END:
 					System.err.println("Found Token END.");
@@ -41,27 +44,51 @@ class Decls {
 	//int or real or bool
 	if ( Lexer.nextToken == Token.KEY_INT){
 			System.err.println("FOUND: Int Token");
-			Lexer.lex();
 			new Idlist();
 			if ( Lexer.nextToken != Token.SEMICOLON ){
 				System.err.println("ERROR: Missing Semicolon");
-			} else{ System.err.println("FOUND: Semicolon."); }
-			Lexer.lex();
- 
-		}	
-	} 
+			} else{ 
+				System.err.println("FOUND: Semicolon."); 
+				Lexer.lex();
+		}
+ 		
+		}
+	
+	if (Lexer.nextToken == Token.KEY_REAL){
+		System.err.println("FOUND: Real token");
+		new Idlist();
+			if ( Lexer.nextToken != Token.SEMICOLON ){
+				System.err.println("ERROR: Missing Semicolon");
+			} else{ 
+				System.err.println("FOUND: Semicolon.");
+				Lexer.lex(); }
+		
+		}
+	
+	if (Lexer.nextToken == Token.KEY_BOOL){ 
+		System.err.println("FOUND: Bool Token.");
+		new Idlist();
+			if ( Lexer.nextToken != Token.SEMICOLON ){
+				System.err.println("ERROR: Missing Semicolon");
+			} else{ 
+				System.err.println("FOUND: Semicolon."); 
+				Lexer.lex();
+			}
+		
+		}
+	}
+
 }
 
 class Idlist {
 	public Idlist(){
 	//process first token.
-	 
+	Lexer.lex();
 	process_id();
 	Lexer.lex();
 	//process middle;
-	System.err.println("Token " + Lexer.nextToken ) ; 
+	//System.err.println("Token " + Lexer.nextToken ) ; 
 	while ( Lexer.nextToken == Token.COMMA ){
-
 		System.out.println("FOUND: Token COMMA.");
 		//We have another id to process, 0 or more.	
 		Lexer.lex();
@@ -83,6 +110,24 @@ class Idlist {
 }
 
 class Stmts {
+	public Stmts(){
+		if (Lexer.nextToken == Token.LEFT_BRACE){ 
+			System.err.println("FOUND: Left Brace.");
+			Lexer.lex();
+		}
+		else
+			System.err.println("ERROR: Missing Left Brace!");
+
+		new Stmt();
+
+		if ( Lexer.nextToken == Token.RIGHT_BRACE ){
+			System.err.println("FOUND: Right Brace.");
+			Lexer.lex();
+		}
+		else
+			System.err.println("ERROR: Missing Right Brace!");
+
+	}
 	 
 }
 

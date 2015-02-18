@@ -68,11 +68,6 @@ public class Lexer {
 					nextToken = Token.KEY_BEGIN;
 			} else
 					nextToken = Token.ID;
-					
-					while( !Character.isWhitespace(ch) ){
-						ch = buffer.getChar();
-					} 
-					
 			}
 		else if (Character.isDigit(ch)) {
 			nextToken = getNumToken();
