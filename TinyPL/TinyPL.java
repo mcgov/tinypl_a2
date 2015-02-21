@@ -178,6 +178,7 @@ class Stmt {
 class Assign {
 	public Assign(){
 	 System.err.println("BEGIN: ASSIGNMENT OPERATION.");
+
 	 //Buffer should be pointing at the var name.
 			Lexer.lex();
 			TinyPL.expect_token(Token.ASSIGN_OP);
@@ -231,7 +232,7 @@ class Cmpd  {
 class Expr {  
 	public Expr(){
 		System.err.println("CREATING EXPRESSION...");
-	 	new Factor();
+	 	new Term();
 	 	if (Lexer.nextToken == Token.ADD_OP || 
 	 		Lexer.nextToken == Token.SUB_OP ||
 	 		Lexer.nextToken == Token.OR_OP    ) {
@@ -252,7 +253,7 @@ class Term {
 	 		Lexer.nextToken == Token.AND_OP ) {
 	 		System.err.println("FOUND ADDITIONAL EXPRESSION: " + Token.toString(Lexer.nextToken) );
 	 		Lexer.lex();
-	 		new Expr();
+	 		new Term();
 	 	}
 	 }
 
@@ -267,25 +268,88 @@ class Factor {
 				System.err.println("FOUND: Negation Operation.");
 				Lexer.lex();
 				break;
-			case Token.RIGHT_PAREN:
+			case Token.LEFT_PAREN:
 				Lexer.lex();
+				System.out.println("FOUND TOKEN: " + Token.toString(Lexer.nextToken));
+
 				new Expr();
+				if (Lexer.nextToken == Token.RIGHT_PAREN){
+					TinyPL.expect_token(Token.RIGHT_PAREN);
+					//and we're done.
+				} else {
+					System.err.println("FOUND AN EQUIVALENCE STATEMENT.");
+					switch ( Lexer.nextToken ){
+						case Token.LE_OP:
+							TinyPL.expect_token(Token.LE_OP);
+							break;
+						case Token.GE_OP:
+							TinyPL.expect_token(Token.GE_OP);
+							break;
+						case Token.NE_OP:
+							TinyPL.expect_token(Token.NE_OP);
+							break;
+						case Token.EQ_OP:
+							TinyPL.expect_token(Token.EQ_OP);
+							break;
+						case Token.LT_OP:
+							TinyPL.expect_token(Token.LT_OP);
+							break;
+						case Token.GT_OP:
+							TinyPL.expect_token(Token.GT_OP);
+							break;	
+						default:
+							System.err.println("ERROR: You fucked up.");
+						} //switch
+					new Expr();
+					TinyPL.expect_token(Token.RIGHT_PAREN);
+				}
 				///handle weird cases
-
 				break;
-
+			default:
+				switch ( Lexer.nextToken ){
+					case Token.INT_LIT:
+						new Int_Lit();
+						break;
+					case Token.REAL_LIT:
+						new Real_Lit();
+						break;
+					case Token.ID:
+						new Id_Lit();
+						break;
+					case Token.TRUE_LIT:
+						//do something?
+						new Bool_Lit();
+						break;
+					case Token.FALSE_LIT:
+						new Bool_Lit();
+						break;
+					default:
+						System.out.println("ERROR: Literal couldn't resolve.");
+						Lexer.lex();
+						break;
+					}
 		}
-		new Literal();
+		//new Literal();
 	
 	}
 	 
 }
 
 class Literal {
+	public int type;
+	public Literal(){
+		System.err.println("RESOLVED TO: Literal Type " + Token.toString(Lexer.nextToken));
+		this.type = Lexer.nextToken;
+	}
 	 
 }
 
 class Int_Lit extends Literal {
+	public Int_Lit(){
+		System.err.println(Token.toString(Lexer.nextToken) + " RESOLVED TO INT LITERAL " );
+		Lexer.lex();
+
+	}
 	 
 	
 }
@@ -296,11 +360,32 @@ class Real_Lit extends Literal {
 }
 
 class Bool_Lit extends Literal {
-	 
+	public boolean value;
+	 public Bool_Lit(){
+	 	
+	 	System.err.println("BOOL LITERAL CREATION.");
+	 	
+	 	if (Lexer.nextToken == Token.TRUE_LIT){
+	 		TinyPL.expect_token(Token.TRUE_LIT);
+	 		this.value = true;
+	 	}
+	 	else if( Lexer.nextToken == Token.FALSE_LIT ){
+	 		TinyPL.expect_token(Token.FALSE_LIT);
+	 		this.value = false;
+	 	} else {
+	 		System.err.println("Something Resolved Incorrectly.");
+	 		Lexer.lex();
+	 	}
+	 	
+	 }
 	
 }
 
 class Id_Lit extends Literal {
+	public Id_Lit(){
+		System.err.println("Found ID Literal.");
+		Lexer.lex();
+	}
 
 	
 }
