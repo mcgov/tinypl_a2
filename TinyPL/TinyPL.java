@@ -54,8 +54,7 @@ class Program {
 	System.err.println( Lexer.nextToken );
 	 switch (Lexer.nextToken) {
 		 case Token.KEY_BEGIN: 
-			 System.err.println("Found Token BEGIN.");
-			 Lexer.lex();
+			TinyPL.expect_token(Token.begin);
 			 if ( Lexer.nextToken == Token.KEY_INT ||
 			 		Lexer.nextToken == Token.KEY_BOOL ||
 			 		Lexer.nextToken == Token.KEY_REAL ){
@@ -179,6 +178,7 @@ class Stmt {
 class Assign {
 	public Assign(){
 	 System.err.println("BEGIN: ASSIGNMENT OPERATION.");
+	 //Buffer should be pointing at the var name.
 			Lexer.lex();
 			TinyPL.expect_token(Token.ASSIGN_OP);
 			new Expr();
@@ -232,10 +232,10 @@ class Expr {
 	public Expr(){
 		System.err.println("CREATING EXPRESSION...");
 	 	new Factor();
-	 	if (Lexer.nextToken == Token.MULT_OP || 
-	 		Lexer.nextToken == Token.DIV_OP ||
-	 		Lexer.nextToken == Token.AND_OP ) {
-	 		System.err.println("FOUND ADDITIONAL EXPRESSION");
+	 	if (Lexer.nextToken == Token.ADD_OP || 
+	 		Lexer.nextToken == Token.SUB_OP ||
+	 		Lexer.nextToken == Token.OR_OP ) {
+	 		System.err.println("FOUND ADDITIONAL EXPRESSION: " + Token.toString(Lexer.nextToken) );
 	 		Lexer.lex();
 	 		new Expr();
 	 	}
@@ -244,11 +244,37 @@ class Expr {
 }
 
 class Term {  
+	public Term(){
+		System.err.println("RESOLVE: Term.")
+	new Factor();
+	if (Lexer.nextToken == Token.MULT_OP || 
+	 		Lexer.nextToken == Token.DIV_OP ||
+	 		Lexer.nextToken == Token.AND_OP ) {
+	 		System.err.println("FOUND ADDITIONAL EXPRESSION: " + Token.toString(Lexer.nextToken) );
+	 		Lexer.lex();
+	 		new Expr();
+	 	}
+	 }
 
 }
 
 
 class Factor {  
+	public Factor(){
+		System.err.println("RESOLVE: Factor.");
+		switch (Lexer.nextToken){
+			case Token.NEG_OP:
+				Lexer.lex();
+				break;
+			case Token.RIGHT_PAREN;
+				Lexer.lex();
+				new Expr();
+				break;
+
+		}
+		new Literal();
+	
+	}
 	 
 }
 
