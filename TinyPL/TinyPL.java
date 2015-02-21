@@ -2,6 +2,27 @@
 
 public class TinyPL {
 		
+public static boolean hasMoreStatements(){
+	//Evaluate whether the next token indicates the start of another stmt.
+	switch (Lexer.nextToken){
+		case Token.ID:
+			//TODO: store id name
+			return true;
+
+		case Token.KEY_WHILE:
+			return true;
+			
+		case Token.KEY_IF:
+			return true;
+
+		case Token.LEFT_BRACE:
+			return true;
+
+		default:
+			return false;		
+		}
+
+}
 
 public static void find_semi(){
 	//evaulate the current next token to see if it's a terminator.
@@ -40,9 +61,8 @@ class Program {
 			 		Lexer.nextToken == Token.KEY_REAL ){
 			 	new Decls();
 			}
-			while ( Lexer.nextToken == Token.LEFT_BRACE ){
-				new Stmts();
-			}
+			
+			new Stmts();
 					///derp, messy.
 			 switch (Lexer.nextToken){	
 				case Token.KEY_END:
@@ -118,12 +138,13 @@ class Idlist {
 
 class Stmts {
 	public Stmts(){
-		TinyPL.expect_token(Token.LEFT_BRACE);
-		new Stmt();
-
-		TinyPL.expect_token(Token.RIGHT_BRACE);
-	}
+		System.out.println( TinyPL.hasMoreStatements() );
+		while ( TinyPL.hasMoreStatements() ){
+			new Stmt();
+			}
 	 
+	}
+
 }
 
 class Stmt {
@@ -131,21 +152,20 @@ class Stmt {
 	switch (Lexer.nextToken){
 		case Token.ID:
 			//TODO: store id name
-			System.err.println("BEGIN: ASSIGNMENT OPERATION.");
-			Lexer.lex();
-			TinyPL.expect_token(Token.ASSIGN_OP);
-			new Expr();
-			TinyPL.find_semi();
-			System.err.println("END: ASSIGNMENT OPERATION.");
-
+			new Assign();
 			break;
+
 		case Token.KEY_WHILE:
-			System.err.println("BEGIN: WHILE LOOP.");
-			Lexer.lex();
-			TinyPL.expect_token( Token.LEFT_PAREN );
+			new Loop();
+			break;
+		case Token.KEY_IF:
 			new Cond();
-			TinyPL.expect_token( Token.RIGHT_PAREN );
-			new Stmt();
+			break;
+		case Token.LEFT_BRACE:
+			System.err.println("FOUND: Left Brace.");
+			new Cmpd();
+			TinyPL.expect_token(Token.RIGHT_BRACE);
+
 			break;
 
 		default:
@@ -157,24 +177,70 @@ class Stmt {
 } 
 
 class Assign {
-	 
+	public Assign(){
+	 System.err.println("BEGIN: ASSIGNMENT OPERATION.");
+			Lexer.lex();
+			TinyPL.expect_token(Token.ASSIGN_OP);
+			new Expr();
+			TinyPL.find_semi();
+			System.err.println("END: ASSIGNMENT OPERATION.");
+	}
+
 }
 
 class Cond  {
-	 
+	public Cond(){
+		System.err.println("BEGIN: CONDITIONAL STATEMENT.");
+		Lexer.lex();
+		TinyPL.expect_token(Token.LEFT_PAREN);
+		new Expr();
+		TinyPL.expect_token(Token.RIGHT_PAREN);
+		new Stmt();
+		if ( Lexer.nextToken == Token.KEY_ELSE ){
+			System.err.println("FOUND: ELSE STATEMENT.");
+			Lexer.lex();
+			new Stmt();
+		}
+	}
+
 }
 
 class Loop {
-
+	public Loop(){ 
+			System.err.println("BEGIN: WHILE LOOP.");
+			Lexer.lex();
+			TinyPL.expect_token( Token.LEFT_PAREN );
+			new Expr();
+			TinyPL.expect_token( Token.RIGHT_PAREN );
+			new Stmt();
+			System.err.println("END: WHILE LOOP.");
+		}
 }
 
 class Cmpd  {
+	public Cmpd(){
+		System.err.println("BEGIN CMPD STATEMENT:");
+		Lexer.lex();
+		new Stmts();
+		System.err.println("END CMPD STATEMENT.");
+	}	
 	 
 }
 
 
 class Expr {  
-	 
+	public Expr(){
+		System.err.println("CREATING EXPRESSION...");
+	 	new Factor();
+	 	if (Lexer.nextToken == Token.MULT_OP || 
+	 		Lexer.nextToken == Token.DIV_OP ||
+	 		Lexer.nextToken == Token.AND_OP ) {
+	 		System.err.println("FOUND ADDITIONAL EXPRESSION");
+	 		Lexer.lex();
+	 		new Expr();
+	 	}
+
+	}
 }
 
 class Term {  
