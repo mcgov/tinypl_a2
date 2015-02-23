@@ -1,5 +1,3 @@
-
-
 public class TinyPL {
 		
 public static boolean hasMoreStatements(){
@@ -42,6 +40,14 @@ public static void expect_token(int tokenVal){
 	if ( msg == "FOUND:" )
 		Lexer.lex();
 }
+
+public static void fail(int token){
+	//easyfail method :D
+	
+	String msg = "Failed due to missing token: " + Token.toString(token);
+	System.out.println(msg);
+	System.exit(1);
+	}
 
 	public static void main(String args[]) {   
 		   Lexer.lex();
@@ -91,7 +97,12 @@ class Decls {
 		}
 	
 	
-	
+	if (Lexer.nextToken == Token.KEY_REAL){
+		System.err.println("FOUND: Real token");
+		new Idlist();
+		TinyPL.find_semi();
+		}
+
 	if (Lexer.nextToken == Token.KEY_BOOL){ 
 		System.err.println("FOUND: Bool Token.");
 		new Idlist();
@@ -100,12 +111,7 @@ class Decls {
 		}
 	
 
-	if (Lexer.nextToken == Token.KEY_REAL){
-		System.err.println("FOUND: Real token");
-		new Idlist();
-		TinyPL.find_semi();
-
-		}
+	
 
 	}
 
@@ -198,9 +204,11 @@ class Cond  {
 	public Cond(){
 		System.err.println("BEGIN: CONDITIONAL STATEMENT.");
 		Lexer.lex();
-		TinyPL.expect_token(Token.LEFT_PAREN);
+		//TinyPL.expect_token(Token.LEFT_PAREN);
+		if (Lexer.nextToken != Token.LEFT_PAREN){
+			TinyPL.fail(Token.LEFT_PAREN);
+			}
 		new Expr();
-		TinyPL.expect_token(Token.RIGHT_PAREN);
 		new Stmt();
 		if ( Lexer.nextToken == Token.KEY_ELSE ){
 			System.err.println("FOUND: ELSE STATEMENT.");
@@ -215,9 +223,12 @@ class Loop {
 	public Loop(){ 
 			System.err.println("BEGIN: WHILE LOOP.");
 			Lexer.lex();
-			TinyPL.expect_token( Token.LEFT_PAREN );
+			if (Lexer.nextToken != Token.LEFT_PAREN){
+				TinyPL.fail(Token.LEFT_PAREN);
+				}
+			//TinyPL.expect_token( Token.LEFT_PAREN );
 			new Expr();
-			TinyPL.expect_token( Token.RIGHT_PAREN );
+			//TinyPL.expect_token( Token.RIGHT_PAREN );
 			new Stmt();
 			System.err.println("END: WHILE LOOP.");
 		}
@@ -272,12 +283,14 @@ class Factor {
 			case Token.NEG_OP:
 				System.err.println("FOUND: Negation Operation.");
 				Lexer.lex();
+				new Factor();
 				break;
 			case Token.LEFT_PAREN:
 				Lexer.lex();
-				System.out.println("FOUND TOKEN: " + Token.toString(Lexer.nextToken));
+				//System.out.println("FOUND TOKEN: " + Token.toString(Lexer.nextToken));
 
 				new Expr();
+				System.err.println(Lexer.nextToken);
 				if (Lexer.nextToken == Token.RIGHT_PAREN){
 					TinyPL.expect_token(Token.RIGHT_PAREN);
 					//and we're done.
@@ -331,6 +344,7 @@ class Factor {
 					default:
 						System.out.println("ERROR: Literal couldn't resolve.");
 						Lexer.lex();
+						System.exit(0);
 						break;
 					}
 		}
