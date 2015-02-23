@@ -1,0 +1,106 @@
+TEST CASES FOR PART I
+
+TEST CASE 0: Empty Program
+
+begin
+end
+
+
+TEST CASE 1: Declarations
+
+begin
+	int x, y, z;
+	bool a, b, c, d, e;
+	real p, q, r;
+end
+
+
+TEST CASE 2: Sequencing
+
+begin
+	int x;
+	real y;
+	bool z;
+	x = 12345;
+	y = 123.456;
+	z = false;
+end
+
+
+TEST CASE 3: Nested if-then-else
+
+begin
+	int i, j, k, m;
+	if (i > j)
+  	 	if (j > k)  m = k;
+   		else m = j;
+	else 	
+		if (k > i) m = i;
+     		else m = k;
+end
+
+
+TEST CASE 4: Nested while
+
+begin
+	real x, y;
+	bool b;
+	x = 50.0;
+	while (x <= 100.0) {
+		b = false;
+		y = 1.414;
+		while (!b) {
+			y = y * 1.414;
+			x = x / 2.0;
+			b = b || (x >= y);
+		}
+	}
+end
+
+
+TEST CASE 5: Arithmetic and Boolean Expressions
+
+begin
+	int i, j, k;
+	real p, q;
+	bool a, b, c;
+
+	i = 1234;
+	j = (i +1) * (i - 1) / 2; 
+
+	p = 3.1415;
+	q = (p + 1.0) * (p - 1.0) / 2.0;
+
+	b = !!(i == j) && (p >= q) || (j > k);
+end
+
+	
+TEST CASE 6: Combine Everything
+
+begin 
+	int s, i, n;
+	bool p;
+
+	n = 37;
+	s = 1;
+
+	while (s*s <= n)  
+		s = s + 1;
+
+	i = 2;
+	p  = true;
+
+	if (n > 2)
+		while (p && (i <= s+1)) {
+		      	if ((n/i)*i == n)
+			  	 p = false;
+			i = i + 1;
+		}
+end
+		
+
+
+
+
+
+

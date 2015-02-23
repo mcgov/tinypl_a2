@@ -66,6 +66,7 @@ class Program {
 			 switch (Lexer.nextToken){	
 				case Token.KEY_END:
 					System.err.println("Found Token END.");
+					System.out.println("Program Accepted!");
 					break;
 				default:
 					System.err.println("ERROR: Missing END Token.");
@@ -89,12 +90,7 @@ class Decls {
  		
 		}
 	
-	if (Lexer.nextToken == Token.KEY_REAL){
-		System.err.println("FOUND: Real token");
-		new Idlist();
-		TinyPL.find_semi();
-
-		}
+	
 	
 	if (Lexer.nextToken == Token.KEY_BOOL){ 
 		System.err.println("FOUND: Bool Token.");
@@ -102,6 +98,15 @@ class Decls {
 		TinyPL.find_semi();
 		
 		}
+	
+
+	if (Lexer.nextToken == Token.KEY_REAL){
+		System.err.println("FOUND: Real token");
+		new Idlist();
+		TinyPL.find_semi();
+
+		}
+
 	}
 
 }
@@ -150,7 +155,7 @@ class Stmt {
 	public Stmt(){
 	switch (Lexer.nextToken){
 		case Token.ID:
-			//TODO: store id name
+			//TODO: Store var names.
 			new Assign();
 			break;
 
@@ -355,7 +360,11 @@ class Int_Lit extends Literal {
 }
 
 class Real_Lit extends Literal {
-	 
+	public double value;
+	 public Real_Lit(){
+	 	System.err.println("RESOLVED TO: Real Literal.");
+	 	Lexer.lex();
+	 }
 	
 }
 
